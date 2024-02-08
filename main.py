@@ -1,8 +1,3 @@
-"""
-Tair Huri, 325329118
-Noa Shem Tov, 207000134
-AN HW1
-"""
 def PrintMatrix(matrix):
     """ Matrix Printing Function """
     for line in matrix:
