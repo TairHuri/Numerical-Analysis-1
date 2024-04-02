@@ -1,6 +1,8 @@
 # @source: https://github.com/lihiSabag/Numerical-Analysis-2023.git
 import sympy as sp
-def newton_raphson(polynomial, interval, epsilon=0.0001):
+from sympy import sympify
+
+def newton_raphson(polynomial, interval, epsilon):
     print("Newton Raphson method")
     x = sp.symbols('x')
     f = sp.sympify(polynomial)
@@ -23,7 +25,7 @@ def newton_raphson(polynomial, interval, epsilon=0.0001):
     print("Method did not converge within 100 iterations.")
     return None
 
-def secant_method(polynomial, interval, epsilon=0.0001):
+def secant_method(polynomial, interval, epsilon):
     print("Secant method")
     x = sp.symbols('x')
     f = sp.sympify(polynomial)
@@ -46,15 +48,44 @@ def secant_method(polynomial, interval, epsilon=0.0001):
     print("Method did not converge within 100 iterations.")
     return None
 
+def get_polynomial_from_user():
+  """
+  This function prompts the user to enter a polynomial function as a string
+  and returns a sympy expression.
+  """
+  while True:
+    polynomial_str = input("Enter the polynomial function (e.g., x**2 - 3*x + 2): ")
+    try:
+      x = sp.symbols('x')
+      polynomial_func = sp.sympify(polynomial_str)
+      return polynomial_func
+    except SyntaxError:
+      print("Invalid polynomial format. Please try again.")
+
 if __name__ == '__main__':
-    polynomial = 'x**2 - 5*x + 2'
-    interval = (0, 10)
+    polynomial = get_polynomial_from_user()
+    # Get interval from user input
+    flag = 'no'
+    while flag == 'no':
+        interval_start = float(input("Enter the start of the interval: "))
+        interval_end = float(input("Enter the end of the interval: "))
+        if interval_end > interval_start:
+            flag = 'yes'
+        else:
+            print("Invalid, lease try again.")
+    interval = (interval_start, interval_end)
     epsilon = 0.0001
-    root, numberOfIteration = newton_raphson(polynomial, interval, epsilon)
-    if root is not None:
-        print("In the Newton Raphson method, the number of iterations performed is", numberOfIteration)
-        print("The equation f(x) has an approximate root at x = {:<15.9f} ".format(root),"\n")
-    root, numberOfIteration = secant_method(polynomial, interval, epsilon)
-    if root is not None:
-        print("In the Secant method, the number of iterations performed is", numberOfIteration)
-        print("The equation f(x) has an approximate root at x = {:<15.9f} ".format(root),"\n")
+    method_choice = float(input("Enter '1' for Newton-Raphson method or '2' for Secant method: "))
+    while method_choice != 1 and method_choice != 2:
+        print("Invalid, lease try again.")
+        method_choice = float(input("Enter '1' for Newton-Raphson method or '2' for Secant method: "))
+    if method_choice == 1:
+        root, numberOfIteration = newton_raphson(polynomial, interval, epsilon)
+        if root is not None:
+            print("In the Newton Raphson method, the number of iterations performed is", numberOfIteration)
+            print("The equation f(x) has an approximate root at x = {:<15.9f} ".format(root),"\n")
+    else:
+        root, numberOfIteration = secant_method(polynomial, interval, epsilon)
+        if root is not None:
+            print("In the Secant method, the number of iterations performed is", numberOfIteration)
+            print("The equation f(x) has an approximate root at x = {:<15.9f} ".format(root),"\n")
